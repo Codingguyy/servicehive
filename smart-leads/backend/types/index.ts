@@ -1,35 +1,27 @@
-import { Request } from 'express'
-import { Types } from 'mongoose'
-
 export type UserRole = 'admin' | 'sales'
 export type LeadStatus = 'New' | 'Contacted' | 'Qualified' | 'Lost'
 export type LeadSource = 'Website' | 'Instagram' | 'Referral'
 export type SortOrder = 'latest' | 'oldest'
 
-export interface IUser {
-  _id: Types.ObjectId
+export interface User {
+  _id?: string
+  id: string
   name: string
   email: string
-  password: string
   role: UserRole
-  createdAt: Date
-  updatedAt: Date
+  createdAt?: string
 }
 
-export interface ILead {
-  _id: Types.ObjectId
+export interface Lead {
+  _id: string
   name: string
   email: string
   status: LeadStatus
   source: LeadSource
-  assignedTo: Types.ObjectId
-  createdBy: Types.ObjectId
-  createdAt: Date
-  updatedAt: Date
-}
-
-export interface AuthRequest extends Request {
-  user?: { id: string; role: UserRole }
+  assignedTo?: User | null
+  createdBy: User
+  createdAt: string
+  updatedAt: string
 }
 
 export interface PaginationMeta {
@@ -49,16 +41,24 @@ export interface ApiResponse<T = unknown> {
   errors?: string[]
 }
 
-export interface LeadQuery {
-  status?: LeadStatus
-  source?: LeadSource
-  search?: string
-  sort?: SortOrder
-  page?: string
-  limit?: string
+export interface AuthResponse {
+  token: string
+  user: User
 }
 
-export interface JwtPayload {
-  id: string
-  role: UserRole
+export interface LeadFilters {
+  status?: LeadStatus | ''
+  source?: LeadSource | ''
+  search?: string
+  sort?: SortOrder
+  page?: number
+  limit?: number
+}
+
+export interface LeadFormData {
+  name: string
+  email: string
+  status: LeadStatus
+  source: LeadSource
+  assignedTo?: string
 }
